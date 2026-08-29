@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cat-dog-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cat-dog-api
+  template:
+    metadata:
+      labels:
+        app: cat-dog-api
+    spec:
+      containers:
+      - name: cat-dog-api
+        image: cat-dog-api:latest
+        imagePullPolicy: IfNotPresent        
+        ports:
+        - containerPort: 8000

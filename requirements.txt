@@ -1,0 +1,109 @@
+# =========================
+# Core
+# =========================
+tensorflow
+mlflow
+scikit-learn
+matplotlib
+seaborn
+protobuf>=6.33.6
+
+fastapi
+uvicorn[standard]
+tensorflow
+pillow
+python-multipart
+gradio
+requests
+python-multipart
+numpy
+pandas
+scipy
+
+# # =========================
+# # Visualization
+# # =========================
+# matplotlib==3.10.3
+# seaborn==0.13.2
+# plotly==6.2.0
+# statsmodels
+# kaggle
+
+# # =========================
+# # Machine Learning
+# # =========================
+# scikit-learn==1.7.0
+# xgboost==3.0.2
+# lightgbm==4.6.0
+# imbalanced-learn==0.14.0
+# optuna==4.4.0
+# joblib==1.5.1
+
+# # =========================
+# # Explainability
+# # =========================
+# shap==0.48.0
+
+# # =========================
+# # Experiment Tracking
+# # =========================
+# mlflow==3.1.4
+
+# # =========================
+# # Feature Store
+# # =========================
+# #feast==0.52.0
+
+# # =========================
+# # Monitoring
+# # =========================
+# #evidently==0.7.10
+
+# # =========================
+# # Data Validation
+# # =========================
+# great-expectations==1.18.2
+
+# # =========================
+# # API
+# # =========================
+# fastapi==0.116.1
+# uvicorn==0.35.0
+
+# # Feast requires this version
+# pydantic==2.10.6
+
+# # =========================
+# # Storage
+# # =========================
+# pyarrow==20.0.0
+# duckdb==1.3.2
+
+# # =========================
+# # Utilities
+# # =========================
+# python-dotenv==1.1.1
+# PyYAML==6.0.2
+# tqdm==4.67.1
+
+# jupyter
+# notebook
+# ipykernel
+
+# # =========================
+# # Dataset
+# # =========================
+# ucimlrepo==0.0.7
+
+# # =========================
+# # Application
+# # =========================
+# FastAPI
+# gradio
+
+# # =========================
+# # CI/Testing
+# # =========================
+# pytest
+# pytest-cov
+# ruff

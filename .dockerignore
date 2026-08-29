@@ -1,0 +1,42 @@
+# Data
+data/
+dataset/
+notebooks/
+docs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git
+.git/
+.gitignore
+.github
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Tests
+tests/
+
+# MLflow local tracking (if not needed in image)
+mlruns/
+models/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Other
+.gradio/
+.trash/
