@@ -22,7 +22,7 @@ def preprocess_data(
     base_dir: str = "../dataset/Processed/cats_dogs_split",
 ) -> tuple[ImageDataGenerator, ImageDataGenerator, ImageDataGenerator]:
     """
-    Data cleaning for the UCI Heart Disease dataset.
+    Data cleaning for the Cat Dog dataset.
     """
 
     cats = [
