@@ -7,7 +7,7 @@ https://github.com/seeween123/CatDogPredictor
 ---
 
 ### Video Walkthrough
-Please refer to Youtube video: [link](https://youtu.be/bP0nUIUyE4U)
+Please refer to Youtube video: [link](https://youtu.be/8_ZXIwL_tW8)
 
 ---
 
