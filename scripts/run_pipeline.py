@@ -3,30 +3,31 @@
 Runs sequentially: load → validate → preprocess → feature engineering
 """
 
+import argparse
 import os
 import sys
-import argparse
+
 import mlflow
 import mlflow.sklearn
-
-
 from src.models.tune import tune_model
-from src.models.train import train_model
+
 from models.predict import predict_model
+from src.models.train import train_model
 
 # === Fix import path for local modules ===
 # ESSENTIAL: Allows imports from src/ directory structure
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Local modules - Core pipeline components
-from src.data.make_dataset import load_data  # Data loading with error handling
-from src.data.preprocessing import preprocess_data  # Basic data cleaning
 from src.features.build_features import (
     build_features,
 )  # Feature engineering (CRITICAL for model performance)
 from src.utils.validate_data import (
     validate_heart_disease_data,
 )  # Data quality validation
+
+from src.data.make_dataset import load_data  # Data loading with error handling
+from src.data.preprocessing import preprocess_data  # Basic data cleaning
 
 
 def main(args):
@@ -111,6 +112,7 @@ def main(args):
         # === CRITICAL: Save Feature Metadata for Serving Consistency ===
         # This ensures serving pipeline uses exact same features in exact same order
         import json
+
         import joblib
 
         artifacts_dir = os.path.join(project_root, "artifacts")
@@ -180,7 +182,7 @@ if __name__ == "__main__":
 """
 # Use this below to run the pipeline:
 
-python scripts/run_pipeline.py \                                            
+python scripts/run_pipeline.py \\                                            
     --input data/raw/HeartDisease.csv \
     --target target
 

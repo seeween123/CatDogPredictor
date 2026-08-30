@@ -5,6 +5,7 @@ import requests
 
 API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
+
 def check_health():
     try:
         response = requests.get(f"{API_URL}/health", timeout=10)
@@ -21,8 +22,9 @@ def predict(image):
 
     try:
         # Gradio supplies a NumPy array when type='numpy'.
-        from PIL import Image
         import io
+
+        from PIL import Image
 
         pil_image = Image.fromarray(image.astype("uint8"))
         buffer = io.BytesIO()
@@ -51,12 +53,10 @@ def predict(image):
     except Exception as exc:
         return f"Error: {exc}", None
 
+
 def get_metrics():
     try:
-        response = requests.get(
-            f"{API_URL}/metrics",
-            timeout=5
-        )
+        response = requests.get(f"{API_URL}/metrics", timeout=5)
 
         response.raise_for_status()
 
@@ -66,17 +66,13 @@ def get_metrics():
             data.get("request_count", 0),
             data.get("successful_requests", 0),
             data.get("failed_requests", 0),
-            data.get("average_latency_ms", 0)
+            data.get("average_latency_ms", 0),
         )
 
     except requests.exceptions.RequestException as e:
-        return (
-            "Error",
-            "Error",
-            "Error",
-            str(e)
-        )
-    
+        return ("Error", "Error", "Error", str(e))
+
+
 with gr.Blocks(title="Cats vs Dogs Classifier") as demo:
     gr.Markdown(
         """
@@ -124,58 +120,31 @@ with gr.Blocks(title="Cats vs Dogs Classifier") as demo:
     )
 
     with gr.Row():
-
-        request_count = gr.Number(
-            label="Total Requests",
-            value=0,
-            interactive=False
-        )
+        request_count = gr.Number(label="Total Requests", value=0, interactive=False)
 
         successful_requests = gr.Number(
-            label="Successful Requests",
-            value=0,
-            interactive=False
+            label="Successful Requests", value=0, interactive=False
         )
 
-        failed_requests = gr.Number(
-            label="Failed Requests",
-            value=0,
-            interactive=False
-        )
+        failed_requests = gr.Number(label="Failed Requests", value=0, interactive=False)
 
         average_latency = gr.Number(
-            label="Average Latency (ms)",
-            value=0,
-            interactive=False
+            label="Average Latency (ms)", value=0, interactive=False
         )
 
-    refresh_button = gr.Button(
-        "Refresh Metrics"
-    )
+    refresh_button = gr.Button("Refresh Metrics")
 
     refresh_button.click(
         fn=get_metrics,
-        outputs=[
-            request_count,
-            successful_requests,
-            failed_requests,
-            average_latency
-        ]
+        outputs=[request_count, successful_requests, failed_requests, average_latency],
     )
 
     # Automatically refresh every 5 seconds
-    timer = gr.Timer(
-        value=5
-    )
+    timer = gr.Timer(value=5)
 
     timer.tick(
         fn=get_metrics,
-        outputs=[
-            request_count,
-            successful_requests,
-            failed_requests,
-            average_latency
-        ]
+        outputs=[request_count, successful_requests, failed_requests, average_latency],
     )
 
 if __name__ == "__main__":
