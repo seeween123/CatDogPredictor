@@ -35,24 +35,3 @@ pytest -v tests
 The preprocessing and training tests require the project's TensorFlow and
 MLflow dependencies.
 
-## Important source issues found
-
-Two uploaded files currently need small fixes before they can be used as
-normal Python modules:
-
-1. `make_dataset(2).py` contains Jupyter/IPython `!` commands:
-   `!shutil.copy(...)` and `!kaggle datasets download ...`.
-   These are not valid Python syntax in a `.py` file.
-
-2. `predict(4).py` defines `predict_model(...)` but calls
-   `predict_cat_or_dog(...)` at module level. It also executes a prediction
-   immediately when imported. The prediction tests therefore extract the
-   function without executing the example call.
-
-Recommended production fix for `predict(4).py`:
-
-```python
-if __name__ == "__main__":
-    image_path = r"../dataset/Processed/cats_dogs_split/test/cat/42.jpg"
-    predict_model(image_path)
-```

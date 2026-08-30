@@ -1,8 +1,8 @@
-## Heart Disease Prediction – End-to-End Machine Learning Project
-### Purpose
+## Cat Dog Prediction for Pet Adoption Agency – End-to-End Machine Learning Project
 
-Build and deploy an end-to-end machine learning system that predicts
-the presence of heart disease using the UCI Heart Disease dataset. An end-to-end Machine Learning and MLOps project for predicting the likelihood of heart disease using clinical patient data from the UCI Heart Disease dataset. The project demonstrates the complete machine learning lifecycle, including data preprocessing, exploratory data analysis (EDA), feature engineering, model training, hyperparameter optimization with Optuna, experiment tracking with MLflow, model serving using FastAPI, containerization with Docker, and CI/CD automation using GitHub Actions.
+### Repository
+
+https://github.com/seeween123/CatDogPredictor
 
 ---
 
@@ -11,11 +11,26 @@ Please refer to Youtube video: [link](https://youtu.be/bP0nUIUyE4U)
 
 ---
 
+### Purpose
+
+Design, develop, and deploy a scalable, reproducible machine learning
+solution using modern MLOps best practices. The assignment emphasizes practical
+automation, experiment tracking, CI/CD pipelines, containerization, cloud deployment,
+and monitoring, mirroring real-world production scenarios.
+
+#### Use case : Binary image classification (Cats vs Dogs) for a pet adoption platform.
+
+#### Dataset : Cats and Dogs classification dataset
+CATS and Dogs binary classification dataset from Kaggle
+Pre-process to 224x224 RGB images for standard CNNs
+
+Split into train/validation/test sets (e.g., 80%/10%/10%). Use data augmentation for better generalization
+
+---
+
 ### Problem solved & benefits
 
-Early identification of patients at risk of cardiovascular disease.
-
-Clinical decision support.
+Identification of Cat vs Dog in give set of images using CNN model.
 
 REST API for inference.
 
@@ -23,12 +38,11 @@ MLflow experiment tracking.
 
 Docker deployment - Docker + MiniKube
 
-FastAPI service.
+FastAPI service - Health, Predict and Metrics endpoints
 
-Interactive Gradio dashboard.
+Interactive Gradio UI.
 
 CI/CD using GitHub Actions.
-
 
 ### Details
 
@@ -47,36 +61,26 @@ CI/CD using GitHub Actions.
 
 This project was developed to demonstrate production-ready machine learning practices by combining modern MLOps tools with a robust prediction pipeline.
 
-The workflow includes:
+Key Features includes:
 
-- Data acquisition and validation
-- Exploratory Data Analysis (EDA)
-- Feature engineering
-- Model training
-- Hyperparameter optimization using Optuna
+- Data acquisition
+- Data augmentation
+- Train, Validation, Test split
+- CNN Model training
 - Experiment tracking with MLflow
+- Git-LFS for model storage
+- Git repository for code and scripts
 - Model Registry
 - Model serving with FastAPI
+- Metrics and logging via
+- Gradio UI application
+- Post deployment Smoke test
+- Post deploment Model Perf tracking
 - Docker containerization
 - MiniKube Orchestration
 - GitHub Actions CI/CD
-- Lint and Unit testing
-
----
-
-## Features
-
-- End-to-end ML pipeline
-- Automated data validation
-- Comprehensive EDA
-- Feature engineering pipeline
-- Multiple machine learning models
-- Optuna hyperparameter optimization
-- MLflow experiment tracking and model registry
-- REST API using FastAPI
-- Docker and MiniKube support
-- GitHub Actions CI pipeline
-- Unit tests with pytest
+- PyLint, Ruff checking 
+- Pytest Unit testing
 
 ---
 
@@ -86,59 +90,15 @@ The workflow includes:
 |-----------|------------|
 | Language | Python 3.11 |
 | Data Processing | Pandas, NumPy |
-| Visualization | Matplotlib, Seaborn |
-| Machine Learning | Scikit-learn |
-| Gradient Boosting | XGBoost |
-| Hyperparameter Tuning | Optuna |
+| Machine Learning | Tensorflow CNN |
 | Experiment Tracking | MLflow |
 | API | FastAPI |
+| UI | Gradio |
 | CI/CD | GitHub Actions |
+| Code check | PyLint/Ruff |
 | Testing | Pytest |
 | Containerization | Docker |
 | Container Orchestration | Minikube |
-
----
-
-# Project Structure
-
-```
-HeartDiseasePredictor/
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-├── data/
-│   ├── raw/
-│   ├── processed/
-│
-├── notebooks/
-│   └── EDA.ipynb
-│
-├── serving/
-│   └── model/
-│
-├── scripts/
-│
-├── src/
-│   ├── app/
-│   ├── data/
-│   ├── features/
-│   ├── models/
-│   ├── utils/
-│   └── serving/
-│
-├── tests/
-│
-├── app.py
-├── main.py
-├── run_pipeline.py
-├── Dockerfile
-├── requirements.txt
-├── deployment.yaml
-├── service.yaml
-├── README.md
-```
 
 ---
 
@@ -147,9 +107,9 @@ HeartDiseasePredictor/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/seeween123/HeartDiseasePredictor.git
+git clone https://github.com/seeween123/CatDogPredictor.git
 
-cd HeartDiseasePredictor
+cd CatDogPredictor
 ```
 
 ---
@@ -194,7 +154,7 @@ pip install -r requirements.txt
 
 ---
 
-# Running the Project
+## Running the Project
 
 Run the complete pipeline
 
@@ -202,82 +162,153 @@ Run the complete pipeline
 python run_pipeline.py
 ```
 
-or
+## Cats vs Dogs Inference Service
+
+This application wraps the trained `cats_dogs_cnn.keras` model in a FastAPI REST API and provides a simple Gradio UI.
+
+### Start the FastAPI service
+
+CD to this project directory:
 
 ```bash
-python src/main.py
+uvicorn api:app --reload --host 0.0.0.0 --port 8000
 ```
 
----
+API documentation:
 
-# Running the API
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Endpoints
+
+#### Health check
+
+```http
+GET /health
+```
+
+Example response:
+
+```json
+{
+  "status": "healthy",
+  "model_loaded": true,
+  "model_path": "./model/cats_dogs_cnn.keras"
+}
+```
+
+#### Prediction
+
+```http
+POST /predict
+```
+
+Upload an image as multipart form data using the field name `file`.
+
+Example with curl:
 
 ```bash
-uvicorn app:app --reload
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@cat.jpg"
 ```
 
-Open
+Example response:
 
+```json
+{
+  "filename": "cat.jpg",
+  "content_type": "image/jpeg",
+  "label": "Cat",
+  "confidence": 0.984321,
+  "probabilities": {
+    "Cat": 0.984321,
+    "Dog": 0.015679
+  }
+}
 ```
-http://localhost:8000/docs
-```
 
-to access the interactive Swagger UI.
+### Start the Gradio UI
 
----
-
-# Running Tests
+Keep the FastAPI server running, then open another terminal:
 
 ```bash
-pytest tests/
+python ui.py
 ```
 
----
+The Gradio UI will call:
 
-# Exploratory Data Analysis
+```text
+http://127.0.0.1:8000/predict
+```
 
-The EDA notebook performs:
+If the API is running on another address, set:
 
-- Missing value analysis
-- Duplicate detection
-- Data validation
-- Statistical summaries
-- Distribution analysis
-- Boxplots
-- Correlation heatmap
-- Multicollinearity analysis (VIF)
-- Feature importance exploration
+Windows PowerShell:
 
-Outputs generated include:
+```powershell
+$env:API_URL="http://127.0.0.1:8000"
+python ui.py
+```
 
-- Histograms
-- Boxplots
-- Correlation Matrix
-- VIF Report
-- Data Summary
+### Model preprocessing
 
----
+The service follows the training preprocessing:
+- RGB image
+- Resize to 224 x 224
+- Normalize pixel values to [0, 1]
+- Sigmoid output interpreted as Dog probability
+- Cat probability = 1 - Dog probability
 
-# Feature Engineering
-
-The preprocessing pipeline includes:
-
-- Missing value handling
-- One-hot encoding
-- Feature scaling
-- Train/Test split
-- Feature selection
-- Processed dataset generation
 
 ---
 
-# Machine Learning Models
+## Running Tests
+
+
+### Pytest tests for the Cats vs Dogs CNN pipeline
+
+These tests cover:
+
+- `preprocessing.py`
+  - image copying
+  - class directory assignment
+  - JPG filtering
+  - 224x224 image generators
+  - batch size and binary classification
+  - test generator shuffle setting
+- `train.py`
+  - CNN layer structure
+  - optimizer/loss/metrics
+  - five training epochs
+  - evaluation and MLflow logging
+- `predict.py`
+  - Dog prediction at probability >= 0.5
+  - Cat prediction at probability < 0.5
+  - image resizing and normalization
+- `make_dataset.py`
+  - current source-code validity issue
+  - expected Kaggle dataset and ZIP names
+
+### Run
+
+From the directory containing the four source files:
+
+```bash
+pip install pytest
+pytest -v tests
+```
+
+The preprocessing and training tests require the project's TensorFlow and
+MLflow dependencies.
+
+## Machine Learning Models
 
 The following algorithms were evaluated:
 
-- Random Forest
-- XGBoost
-- LightGBM
+- CNN
 
 Model performance was evaluated using:
 
@@ -287,41 +318,9 @@ Model performance was evaluated using:
 - Precision
 - ROC-AUC
 
-For this medical classification problem, Recall was prioritized to reduce false negatives.
-
 ---
 
-# Hyperparameter Optimization
-
-Hyperparameter tuning is performed using **Optuna**.
-
-Optuna employs Bayesian optimization using the Tree-structured Parzen Estimator (TPE) sampler to efficiently search for optimal model parameters.
-
-Parameters optimized include:
-
-### XGBoost
-
-- learning_rate
-- max_depth
-- n_estimators
-- min_child_weight
-- gamma
-- subsample
-- colsample_bytree
-- reg_alpha
-- reg_lambda
-
-Benefits of Optuna:
-
-- Faster than Grid Search
-- Bayesian optimization
-- Automatic pruning of poor trials
-- Reduced computation time
-- Better model performance
-
----
-
-# MLflow Experiment Tracking
+## MLflow Experiment Tracking
 
 MLflow is used to record every experiment.
 
@@ -339,7 +338,7 @@ The best model is registered in the MLflow Model Registry before deployment.
 
 ---
 
-# Model Deployment
+## Model Deployment
 
 The selected production model is exported into the serving directory.
 
@@ -348,19 +347,13 @@ FastAPI loads the production model and exposes REST endpoints for prediction.
 Workflow:
 
 ```
-Dataset
+Data Acquisition
      │
      ▼
-EDA
-     │
-     ▼
-Feature Engineering
+Data Augmentation  
      │
      ▼
 Model Training
-     │
-     ▼
-Optuna Optimization
      │
      ▼
 MLflow Tracking
@@ -378,23 +371,23 @@ FastAPI API
 
 ---
 
-# Docker
+## Docker
 
 Build Docker image
 
 ```bash
-docker build -t heart-disease-predictor .
+docker build -t cat-dog-api .
 ```
 
 Run container
 
 ```bash
-docker run -p 8000:8000 heart-disease-predictor
+docker run -p 8000:8000 cat-dog-api
 ```
 
 ---
 
-# Container Orchestration
+## Container Orchestration
 
 This project uses Minikube for creating a virtual cluster and orchestrate the docker contatiner. Deployment.yaml and Service.yaml are used for Minikube configuration. Stantard commands are used to load/unload the container+pod on the target vitual nodes. Please use the following set of commands:
 
@@ -416,7 +409,7 @@ Once the service is up, use the following commands to test the deployment:
 - curl.exe "$env:API_URL/predict" -F "file=@TestImage.jpg"
 - curl.exe "$env:API_URL/metrics"
 
-# CI/CD
+## CI/CD
 
 GitHub Actions automates the following tasks:
 
@@ -440,26 +433,13 @@ The pipeline executes automatically for:
                     Raw Dataset
                          │
                          ▼
-                 Data Validation
-                         │
-                         ▼
-               Exploratory Data Analysis
-                         │
-                         ▼
-                Feature Engineering
+                 Data Augmentation
                          │
                          ▼
                 Train / Test Split
                          │
                          ▼
-       ┌───────────────┬───────────────┬───────────────┐
-       ▼               ▼               ▼
- Logistic Regression Random Forest  XGBoost/LightGBM
-       │               │               │
-       └───────────────┴───────────────┘
-                         │
-                         ▼
-                 Optuna Optimization
+                     CNN model
                          │
                          ▼
                  MLflow Experiment Tracking
@@ -476,12 +456,6 @@ The pipeline executes automatically for:
                          ▼
                      Client Request
 ```
-
----
-
-# Repository
-
-https://github.com/seeween123/HeartDiseasePredictor
 
 ---
 
@@ -503,106 +477,78 @@ Attached are screenshots demonstrating the project's architecture, experiment tr
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 091109.png" width="900">
+<img src="docs/images/Screenshot 2026-07-31 144801.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 091206.png" width="900">
+<img src="docs/images/Screenshot 2026-08-26 061706.png" width="900">
 
 ---
 
-<img src="docs/images/CorrelationMatrix" width="900">
+<img src="docs/images/Screenshot 2026-08-26 061728.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 091228.png" width="900">
+<img src="docs/images/Screenshot 2026-08-26 061812.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 091305.png" width="900">
+<img src="docs/images/Screenshot 2026-08-26 061824.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 091345.png" width="900">
+<img src="docs/images/Screenshot 2026-08-26 061944.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 091431.png" width="900">
+<img src="docs/images/Screenshot 2026-08-26 063944.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 094116.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 030927.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 094131.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 031037.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 094148.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 031056.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 094210.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 031140.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 094305.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 034029.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 094414.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 041734.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 095639.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 043254.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 095652.png" width="900">
+<img src="docs/images/Screenshot 2026-08-28 043312.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 115431.png" width="900">
+<img src="docs/images/Screenshot 2026-08-29 153056.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 111248.png" width="900">
+<img src="docs/images/Screenshot 2026-08-29 170206.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 114926.png" width="900">
+<img src="docs/images/Screenshot 2026-08-29 212929.png" width="900">
 
 ---
 
-<img src="docs/images/Screenshot 2026-07-12 125638.png" width="900">
-
----
-
-<img src="docs/images/Screenshot 2026-07-12 125829.png" width="900">
-
----
-
-<img src="docs/images/Screenshot 2026-07-12 135437.png" width="900">
-
----
-
-<img src="docs/images/Screenshot 2026-07-12 140032.png" width="900">
-
----
-
-<img src="docs/images/Screenshot 2026-07-12 141309.png" width="900">
-
----
-
-<img src="docs/images/Screenshot 2026-07-12 142953.png" width="900">
-
----
-
-<img src="docs/images/Screenshot 2026-07-12 143709.png" width="900">
-
----
-
-<img src="docs/images/Screenshot 2026-07-12 150554.png" width="900">
+<img src="docs/images/Screenshot 2026-08-29 213431.png" width="900">
 
 ---
