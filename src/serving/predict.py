@@ -24,8 +24,9 @@ Production Deployment:
 - Optimized for single-row inference (real-time serving)
 """
 
-import pandas as pd
 import mlflow
+import pandas as pd
+
 from src.data.preprocessing import preprocess_data
 
 # === MODEL LOADING CONFIGURATION ===

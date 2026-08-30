@@ -1,5 +1,6 @@
 import sys
 import time
+
 import requests
 
 BASE_URL = "http://localhost:8000"
@@ -15,10 +16,7 @@ def test_health():
         response = requests.get(HEALTH_URL, timeout=10)
 
         if response.status_code != 200:
-            print(
-                f"❌ Health check failed: "
-                f"HTTP {response.status_code}"
-            )
+            print(f"❌ Health check failed: HTTP {response.status_code}")
             return False
 
         print("✅ Health check passed")
@@ -35,25 +33,12 @@ def test_prediction():
 
     try:
         with open(TEST_IMAGE, "rb") as image:
-            files = {
-                "file": (
-                    TEST_IMAGE,
-                    image,
-                    "image/jpeg"
-                )
-            }
+            files = {"file": (TEST_IMAGE, image, "image/jpeg")}
 
-            response = requests.post(
-                PREDICT_URL,
-                files=files,
-                timeout=30
-            )
+            response = requests.post(PREDICT_URL, files=files, timeout=30)
 
         if response.status_code != 200:
-            print(
-                f"❌ Prediction test failed: "
-                f"HTTP {response.status_code}"
-            )
+            print(f"❌ Prediction test failed: HTTP {response.status_code}")
             print(response.text)
             return False
 

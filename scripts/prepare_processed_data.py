@@ -1,11 +1,11 @@
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+from src.features.build_features import build_features
 
 # make src importable
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from src.data.preprocessing import preprocess_data
-from src.features.build_features import build_features
 
 RAW = Path("data/raw/heart_disease.csv")
 OUT = Path("data/processed/heart_disease_processed.csv")

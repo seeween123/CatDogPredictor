@@ -1,8 +1,8 @@
 import io
+import logging
 import os
 import time
 import uuid
-import logging
 
 import numpy as np
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -13,8 +13,7 @@ from tensorflow.keras.models import load_model
 # Logging configuration
 # ---------------------------------------------------------
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s"
+    level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s"
 )
 
 logger = logging.getLogger("cats-dogs-api")
@@ -54,6 +53,7 @@ if not os.path.exists(MODEL_PATH):
 model = load_model(MODEL_PATH)
 logger.info("Model loaded successfully")
 
+
 # ---------------------------------------------------------
 # Prediction endpoint
 # ---------------------------------------------------------
@@ -69,10 +69,7 @@ def predict_image(image: Image.Image) -> dict:
 
     request_count += 1
 
-    logger.info(
-        "Prediction request started | request_id=%s",
-        request_id
-    )
+    logger.info("Prediction request started | request_id=%s", request_id)
 
     """Preprocess an image and return class probabilities and label."""
     image = image.convert("RGB").resize(IMG_SIZE)
@@ -98,17 +95,17 @@ def predict_image(image: Image.Image) -> dict:
     total_latency += latency
 
     logger.info(
-            "Prediction completed | "
-            "request_id=%s | "
-            "prediction=%s | "
-            "confidence=%.4f | "
-            "latency_ms=%.2f",
-            request_id,
-            label,
-            confidence,
-            latency * 1000
+        "Prediction completed | "
+        "request_id=%s | "
+        "prediction=%s | "
+        "confidence=%.4f | "
+        "latency_ms=%.2f",
+        request_id,
+        label,
+        confidence,
+        latency * 1000,
     )
-        
+
     return {
         "label": label,
         "confidence": round(confidence, 6),
@@ -118,9 +115,11 @@ def predict_image(image: Image.Image) -> dict:
         },
     }
 
+
 # ---------------------------------------------------------
 # Health endpoint
 # ---------------------------------------------------------
+
 
 @app.get("/health")
 def health_check():
@@ -158,25 +157,20 @@ async def predict(file: UploadFile = File(...)):
             detail=f"Unable to process image: {exc}",
         ) from exc
 
+
 # ---------------------------------------------------------
 # Metrics endpoint
 # ---------------------------------------------------------
 
+
 @app.get("/metrics")
 def metrics():
 
-    average_latency = (
-        total_latency / request_count
-        if request_count > 0
-        else 0
-    )
+    average_latency = total_latency / request_count if request_count > 0 else 0
 
     return {
         "request_count": request_count,
         "successful_requests": successful_requests,
         "failed_requests": failed_requests,
-        "average_latency_ms": round(
-            average_latency * 1000,
-            2
-        )
+        "average_latency_ms": round(average_latency * 1000, 2),
     }
